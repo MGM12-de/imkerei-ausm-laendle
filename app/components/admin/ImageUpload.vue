@@ -13,7 +13,10 @@ async function onChange(e: Event) {
   if (!file) return
   loading.value = true
   try {
-    model.value = await upload(file, props.folder)
+    const [url, isAi] = await Promise.all([upload(file, props.folder), detectAiImage(file)])
+    model.value = url
+    ai.value = isAi
+    if (isAi) toast.add({ title: 'KI-Bild erkannt', description: 'Die Metadaten weisen das Bild als KI-generiert aus – der Hinweis wird angezeigt.', icon: 'i-lucide-sparkles', color: 'info' })
   } catch (err) {
     toast.add({ title: 'Upload fehlgeschlagen', description: (err as Error).message, color: 'error' })
   } finally {

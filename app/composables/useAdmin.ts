@@ -151,6 +151,17 @@ export function useImageUpload() {
   return { upload, removeByUrl }
 }
 
+/**
+ * Erkennt KI-Bilder an ihren Metadaten (C2PA / IPTC „DigitalSourceType“), wie sie
+ * z. B. Google Gemini, ChatGPT oder Adobe Firefly mitschreiben. Muss auf der
+ * Originaldatei laufen – beim Verkleinern gehen die Metadaten verloren.
+ * Findet nichts, wenn die Metadaten fehlen (Screenshot, Messenger, Midjourney …).
+ */
+export async function detectAiImage(file: File): Promise<boolean> {
+  const text = new TextDecoder('latin1').decode(await file.arrayBuffer())
+  return text.includes('trainedAlgorithmicMedia') || text.includes('TrainedAlgorithmicMedia')
+}
+
 /** Verkleinert Handyfotos clientseitig und konvertiert sie nach WebP */
 async function resizeImage(file: File, maxSize: number): Promise<Blob> {
   if (file.type === 'image/gif') return file
