@@ -7,10 +7,12 @@ export interface SiteSettings {
   hero_title: string | null
   hero_text: string | null
   hero_image_url: string | null
+  hero_image_ai?: boolean
   about_title: string | null
   about_intro: string | null
   about_text: string | null
   about_image_url: string | null
+  about_image_ai?: boolean
   owner_name: string | null
   street: string | null
   zip: string | null
@@ -36,6 +38,8 @@ export interface Product {
   size: string | null
   price: number | null
   image_url: string | null
+  /** Bild wurde mit KI erstellt → Hinweis wird angezeigt */
+  image_ai?: boolean
   available: boolean
   featured: boolean
   published: boolean
@@ -51,6 +55,8 @@ export interface Post {
   excerpt: string | null
   content: string | null
   image_url: string | null
+  /** Bild wurde mit KI erstellt → Hinweis wird angezeigt */
+  image_ai?: boolean
   published: boolean
   published_at: string
   created_at?: string
@@ -73,6 +79,7 @@ export interface EventItem {
 export interface GalleryImage {
   id: string
   image_url: string
+  image_ai?: boolean
   caption: string | null
   sort: number
   published: boolean

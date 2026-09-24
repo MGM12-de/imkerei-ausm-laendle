@@ -14,7 +14,7 @@ const saving = ref(false)
 const slugTouched = ref(!isNew)
 
 const state = ref<Partial<Post>>({
-  title: '', slug: '', excerpt: '', content: '', image_url: null,
+  title: '', slug: '', excerpt: '', content: '', image_url: null, image_ai: false,
   published: false, published_at: new Date().toISOString()
 })
 
@@ -81,7 +81,7 @@ async function remove() {
       </div>
       <div class="space-y-5">
         <UFormField label="Titelbild">
-          <AdminImageUpload v-model="state.image_url" folder="posts" aspect="aspect-[16/9]" />
+          <AdminImageUpload v-model="state.image_url" v-model:ai="state.image_ai" folder="posts" aspect="aspect-[16/9]" />
         </UFormField>
         <UCard :ui="{ body: 'space-y-4' }">
           <USwitch v-model="state.published" label="Veröffentlicht" />

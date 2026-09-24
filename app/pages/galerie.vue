@@ -38,11 +38,12 @@ function step(dir: number) {
           v-for="(img, i) in images"
           :key="img.id"
           type="button"
-          class="group mb-3 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left sm:mb-4 focus-visible:outline-2 focus-visible:outline-primary"
+          class="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left sm:mb-4 focus-visible:outline-2 focus-visible:outline-primary"
           :aria-label="img.caption ?? 'Bild öffnen'"
           @click="show(i)"
         >
           <img v-if="img.image_url" :src="img.image_url" :alt="img.caption ?? ''" loading="lazy" class="w-full transition duration-300 group-hover:scale-105">
+          <AiBadge v-if="img.image_url && img.image_ai" />
           <MediaImage v-else :class="i % 3 === 0 ? 'aspect-[3/4]' : 'aspect-square'" />
         </button>
       </div>
@@ -52,7 +53,10 @@ function step(dir: number) {
     <UModal v-model:open="open" :title="current?.caption ?? 'Bild'" fullscreen :ui="{ body: 'flex items-center justify-center bg-black/95 p-2 sm:p-6', header: 'bg-black/95 text-white border-white/10', title: 'text-white' }">
       <template #body>
         <div class="relative flex size-full items-center justify-center">
-          <img v-if="current?.image_url" :src="current.image_url" :alt="current.caption ?? ''" class="max-h-full max-w-full object-contain rounded-lg">
+          <div v-if="current?.image_url" class="relative flex max-h-full max-w-full">
+            <img :src="current.image_url" :alt="current.caption ?? ''" class="max-h-full max-w-full object-contain rounded-lg">
+            <AiBadge v-if="current.image_ai" />
+          </div>
           <MediaImage v-else class="aspect-square w-full max-w-lg rounded-2xl" />
           <UButton icon="i-lucide-chevron-left" color="neutral" variant="soft" size="xl" class="absolute left-1 rounded-full" aria-label="Vorheriges Bild" @click="step(-1)" />
           <UButton icon="i-lucide-chevron-right" color="neutral" variant="soft" size="xl" class="absolute right-1 rounded-full" aria-label="Nächstes Bild" @click="step(1)" />
