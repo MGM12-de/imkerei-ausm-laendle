@@ -6,7 +6,7 @@ defineProps<{ product: Product }>()
 
 <template>
   <NuxtLink :to="`/honig/${product.slug}`" class="group flex flex-col rounded-2xl bg-default ring ring-default overflow-hidden transition hover:ring-primary/50 hover:shadow-lg hover:shadow-primary/10 focus-visible:outline-2 focus-visible:outline-primary">
-    <MediaImage :src="product.image_url" :alt="product.name" icon="i-lucide-droplet" class="aspect-[4/3]">
+    <MediaImage :src="product.image_url" :ai="product.image_ai" :alt="product.name" icon="i-lucide-droplet" class="aspect-[4/3]">
       <div class="absolute top-3 left-3 flex gap-2">
         <UBadge v-if="!product.available" color="neutral" variant="solid">Ausverkauft</UBadge>
         <UBadge v-else-if="product.featured" color="primary" variant="solid">Beliebt</UBadge>

@@ -5,6 +5,8 @@ withDefaults(defineProps<{
   alt?: string
   icon?: string
   eager?: boolean
+  /** KI-generiertes Bild → Hinweis-Badge */
+  ai?: boolean
 }>(), { icon: 'i-lucide-hexagon' })
 </script>
 
@@ -21,6 +23,7 @@ withDefaults(defineProps<{
     <div v-else class="absolute inset-0 bg-honeycomb flex items-center justify-center bg-gradient-to-br from-honey-200/70 via-honey-100 to-honey-300/60 dark:from-honey-900/50 dark:via-honey-950/40 dark:to-honey-800/40">
       <UIcon :name="icon" class="size-12 text-honey-500/70" />
     </div>
+    <AiBadge v-if="src && ai" />
     <slot />
   </div>
 </template>

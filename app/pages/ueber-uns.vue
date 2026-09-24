@@ -14,7 +14,7 @@ const facts = [
     <PageIntro eyebrow="Über uns" :title="s?.about_title ?? 'Über uns'" :description="s?.about_intro" />
     <UContainer class="py-10 sm:py-16 grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
       <div class="space-y-4 lg:sticky lg:top-[calc(var(--ui-header-height)+2rem)] lg:self-start">
-        <MediaImage :src="s?.about_image_url" alt="Der Imker bei der Arbeit" icon="i-lucide-heart" eager class="aspect-[4/5] rounded-3xl" />
+        <MediaImage :src="s?.about_image_url" :ai="s?.about_image_ai" alt="Der Imker bei der Arbeit" icon="i-lucide-heart" eager class="aspect-[4/5] rounded-3xl" />
         <div class="grid grid-cols-3 gap-3">
           <div v-for="f in facts" :key="f.label" class="rounded-xl bg-elevated/70 p-3 text-center">
             <p class="font-display text-2xl font-semibold text-primary">{{ f.value }}</p>

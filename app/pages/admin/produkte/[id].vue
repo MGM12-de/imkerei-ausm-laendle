@@ -16,7 +16,7 @@ const slugTouched = ref(!isNew)
 const state = ref<Partial<Product>>({
   name: '', slug: '', category: 'honig', short_description: '', description: '',
   taste: '', consistency: '', harvest: '', size: '500 g', price: null,
-  image_url: null, available: true, featured: false, published: true, sort: 0
+  image_url: null, image_ai: false, available: true, featured: false, published: true, sort: 0
 })
 
 onMounted(async () => {
@@ -95,7 +95,7 @@ async function remove() {
 
       <div class="space-y-5">
         <UFormField label="Produktbild">
-          <AdminImageUpload v-model="state.image_url" folder="products" aspect="aspect-square" />
+          <AdminImageUpload v-model="state.image_url" v-model:ai="state.image_ai" folder="products" aspect="aspect-square" />
         </UFormField>
         <UCard :ui="{ body: 'space-y-4' }">
           <USwitch v-model="state.available" label="Verfügbar" description="Aus = „Ausverkauft“ wird angezeigt" />

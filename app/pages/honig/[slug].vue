@@ -27,7 +27,7 @@ const facts = computed(() => [
   <UContainer v-if="product" class="py-6 sm:py-12">
     <UBreadcrumb :items="[{ label: 'Honig', to: '/honig' }, { label: product.name }]" class="mb-6" />
     <div class="grid gap-8 lg:grid-cols-2 lg:gap-14">
-      <MediaImage :src="product.image_url" :alt="product.name" eager icon="i-lucide-droplet" class="aspect-square rounded-3xl" />
+      <MediaImage :src="product.image_url" :ai="product.image_ai" :alt="product.name" eager icon="i-lucide-droplet" class="aspect-square rounded-3xl" />
       <div>
         <UBadge color="neutral" variant="subtle">{{ categoryLabels[product.category] }}</UBadge>
         <h1 class="mt-3 font-display text-4xl sm:text-5xl font-semibold text-highlighted">{{ product.name }}</h1>

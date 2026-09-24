@@ -82,7 +82,7 @@ async function remove() {
 
     <div v-else class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       <div v-for="(img, i) in items" :key="img.id" class="overflow-hidden rounded-xl ring ring-default">
-        <MediaImage :src="img.image_url" :class="['aspect-square', !img.published && 'opacity-40']">
+        <MediaImage :src="img.image_url" :ai="img.image_ai" :class="['aspect-square', !img.published && 'opacity-40']">
           <div class="absolute right-1.5 top-1.5 flex gap-1">
             <UButton size="xs" color="neutral" variant="solid" icon="i-lucide-arrow-left" aria-label="Nach vorne" :disabled="i === 0" @click="move(i, -1)" />
             <UButton size="xs" color="neutral" variant="solid" icon="i-lucide-arrow-right" aria-label="Nach hinten" :disabled="i === items.length - 1" @click="move(i, 1)" />
@@ -90,8 +90,11 @@ async function remove() {
         </MediaImage>
         <div class="space-y-2 p-2">
           <UInput :model-value="img.caption ?? ''" placeholder="Bildunterschrift" size="sm" class="w-full" @change="(e: Event) => update(img, { caption: (e.target as HTMLInputElement).value })" />
-          <div class="flex items-center justify-between">
-            <USwitch :model-value="img.published" size="sm" label="Sichtbar" @update:model-value="(v: boolean) => update(img, { published: v })" />
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex flex-wrap gap-x-3 gap-y-1">
+              <USwitch :model-value="img.published" size="sm" label="Sichtbar" @update:model-value="(v: boolean) => update(img, { published: v })" />
+              <USwitch :model-value="!!img.image_ai" size="sm" label="KI" @update:model-value="(v: boolean) => update(img, { image_ai: v })" />
+            </div>
             <UButton icon="i-lucide-trash-2" size="xs" color="error" variant="ghost" aria-label="Löschen" @click="toDelete = img" />
           </div>
         </div>

@@ -47,7 +47,7 @@ export const usePosts = (limit?: number) => {
     () => demoPosts.slice(0, limit ?? undefined),
     () => {
       let q = supabase.from('posts')
-        .select('id,title,slug,excerpt,image_url,published,published_at')
+        .select('id,title,slug,excerpt,image_url,image_ai,published,published_at')
         .eq('published', true)
         .order('published_at', { ascending: false })
       if (limit) q = q.limit(limit)

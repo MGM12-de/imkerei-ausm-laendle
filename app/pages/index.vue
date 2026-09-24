@@ -43,7 +43,7 @@ useSeoMeta({ title: () => s.value?.hero_title ?? undefined })
         </div>
 
         <div class="relative mx-auto w-full max-w-md lg:max-w-none">
-          <MediaImage :src="s?.hero_image_url" :alt="s?.site_name" eager icon="i-lucide-flower-2" class="aspect-[4/3] sm:aspect-[5/4] lg:aspect-[4/5] rounded-[2rem] shadow-2xl shadow-honey-900/20" />
+          <MediaImage :src="s?.hero_image_url" :ai="s?.hero_image_ai" :alt="s?.site_name" eager icon="i-lucide-flower-2" class="aspect-[4/3] sm:aspect-[5/4] lg:aspect-[4/5] rounded-[2rem] shadow-2xl shadow-honey-900/20" />
           <div class="absolute -bottom-4 -left-2 sm:-left-6 rounded-2xl bg-default/95 backdrop-blur ring ring-default px-4 py-3 shadow-lg flex items-center gap-3">
             <span class="flex size-10 items-center justify-center rounded-full bg-primary/15 text-primary">
               <UIcon name="i-lucide-leaf" class="size-5" />
@@ -88,7 +88,7 @@ useSeoMeta({ title: () => s.value?.hero_title ?? undefined })
     <!-- ÜBER UNS TEASER -->
     <section class="py-12 sm:py-20 bg-muted/60">
       <UContainer class="grid items-center gap-10 lg:grid-cols-2">
-        <MediaImage :src="s?.about_image_url" alt="Unsere Imkerei" icon="i-lucide-heart" class="aspect-[4/3] rounded-3xl order-last lg:order-first" />
+        <MediaImage :src="s?.about_image_url" :ai="s?.about_image_ai" alt="Unsere Imkerei" icon="i-lucide-heart" class="aspect-[4/3] rounded-3xl order-last lg:order-first" />
         <div>
           <SectionHeader eyebrow="Über uns" :title="s?.about_title ?? 'Über uns'" :description="s?.about_intro" />
           <UButton to="/ueber-uns" size="lg" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right" class="mt-6">
@@ -137,6 +137,7 @@ useSeoMeta({ title: () => s.value?.hero_title ?? undefined })
             v-for="(g, i) in gallery"
             :key="g.id"
             :src="g.image_url"
+            :ai="g.image_ai"
             :alt="g.caption ?? ''"
             :class="['aspect-square rounded-2xl', i === 0 && 'sm:row-span-2 sm:aspect-auto']"
           />

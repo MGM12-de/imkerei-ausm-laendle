@@ -62,7 +62,7 @@ const tabs = [
             </UFormField>
           </div>
           <UFormField label="Titelbild Startseite">
-            <AdminImageUpload v-model="state.hero_image_url" folder="site" aspect="aspect-[4/5]" />
+            <AdminImageUpload v-model="state.hero_image_url" v-model:ai="state.hero_image_ai" folder="site" aspect="aspect-[4/5]" />
           </UFormField>
         </div>
       </template>
@@ -81,7 +81,7 @@ const tabs = [
             </UFormField>
           </div>
           <UFormField label="Foto">
-            <AdminImageUpload v-model="state.about_image_url" folder="site" aspect="aspect-[4/5]" />
+            <AdminImageUpload v-model="state.about_image_url" v-model:ai="state.about_image_ai" folder="site" aspect="aspect-[4/5]" />
           </UFormField>
         </div>
       </template>

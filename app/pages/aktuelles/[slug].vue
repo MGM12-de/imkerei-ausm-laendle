@@ -23,7 +23,7 @@ useSeoMeta({
       <p v-if="post.excerpt" class="mt-4 text-xl text-muted text-pretty">{{ post.excerpt }}</p>
     </UContainer>
     <UContainer v-if="post.image_url" class="max-w-5xl mt-8">
-      <MediaImage :src="post.image_url" :alt="post.title" eager class="aspect-[16/9] rounded-3xl" />
+      <MediaImage :src="post.image_url" :ai="post.image_ai" :alt="post.title" eager class="aspect-[16/9] rounded-3xl" />
     </UContainer>
     <UContainer class="max-w-3xl mt-8">
       <RichText :html="post.content" />
