@@ -1,6 +1,11 @@
 <script setup lang="ts">
 const { data: s } = await useSettings()
-useSeoMeta({ title: 'Über uns', description: () => s.value?.about_intro })
+usePageSeo({
+  title: 'Über uns',
+  description: () => s.value?.about_intro,
+  image: () => s.value?.about_image_url,
+  imageAlt: 'Der Imker bei der Arbeit'
+})
 
 const facts = [
   { value: '100 %', label: 'regional' },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useSeoMeta({ title: 'Termine', description: 'Markttage, Hofverkauf und Veranstaltungen – hier findet ihr uns.' })
+usePageSeo({ title: 'Termine', description: 'Markttage, Hofverkauf und Veranstaltungen – hier bekommt ihr unseren regionalen Honig direkt vom Imker und könnt uns persönlich kennenlernen.' })
 const { data: events } = await useUpcomingEvents()
 const { data: s } = await useSettings()
 

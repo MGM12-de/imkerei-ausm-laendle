@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useSeoMeta({ title: 'Aktuelles', description: 'Neuigkeiten, Geschichten und Wissenswertes rund um unsere Bienen.' })
+usePageSeo({ title: 'Aktuelles', description: 'Neues aus unserer Imkerei: Geschichten aus dem Bienenjahr, frische Ernten und Wissenswertes rund um Honig und Bienen.' })
 const { data: posts } = await usePosts()
 </script>
 
