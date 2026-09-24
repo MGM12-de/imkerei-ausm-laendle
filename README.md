@@ -25,7 +25,11 @@ Ohne verbundene Datenbank läuft alles im **Demo-Modus** mit Beispielinhalten.
 ```bash
 npm install
 npm run dev          # http://localhost:3000  (Demo-Modus)
+npm run lint         # ESLint (npm run lint:fix behebt Formatierung)
+npm run typecheck    # TypeScript-Prüfung
 ```
+
+Bei jedem Push auf `main` und jedem Pull Request prüft die GitHub Action `CI` (`.github/workflows/ci.yml`) Lint, Typecheck und den Cloudflare-Build.
 
 ## Supabase
 

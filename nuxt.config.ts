@@ -1,11 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2026-09-01',
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/supabase'],
   devtools: { enabled: true },
-
-  modules: ['@nuxt/ui', '@nuxtjs/supabase'],
-
-  css: ['~/assets/css/main.css'],
 
   app: {
     head: {
@@ -14,20 +10,12 @@ export default defineNuxtConfig({
     }
   },
 
+  css: ['~/assets/css/main.css'],
+
   ui: {
     theme: {
       colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error']
     }
-  },
-
-  // Supabase: Werte kommen aus .env bzw. Cloudflare-Umgebungsvariablen
-  // (NUXT_PUBLIC_SUPABASE_URL / NUXT_PUBLIC_SUPABASE_KEY).
-  // Ohne Konfiguration läuft die Seite im Demo-Modus mit Beispielinhalten.
-  supabase: {
-    url: process.env.SUPABASE_URL || 'https://demo.supabase.co',
-    key: process.env.SUPABASE_KEY || 'demo-key',
-    redirect: false,
-    types: false
   },
 
   runtimeConfig: {
@@ -39,6 +27,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/admin/**': { ssr: false, headers: { 'X-Robots-Tag': 'noindex' } }
   },
+  compatibilityDate: '2026-09-01',
 
   vite: {
     optimizeDeps: {
@@ -50,5 +39,24 @@ export default defineNuxtConfig({
         '@nuxt/ui > prosemirror-gapcursor'
       ]
     }
+  },
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  },
+
+  // Supabase: Werte kommen aus .env bzw. Cloudflare-Umgebungsvariablen
+  // (NUXT_PUBLIC_SUPABASE_URL / NUXT_PUBLIC_SUPABASE_KEY).
+  // Ohne Konfiguration läuft die Seite im Demo-Modus mit Beispielinhalten.
+  supabase: {
+    url: process.env.SUPABASE_URL || 'https://demo.supabase.co',
+    key: process.env.SUPABASE_KEY || 'demo-key',
+    redirect: false,
+    types: false
   }
 })

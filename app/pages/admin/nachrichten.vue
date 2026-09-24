@@ -9,7 +9,12 @@ const unread = useState<number>('admin-unread')
 const items = ref<Message[]>([])
 const loading = ref(true)
 const selected = ref<Message | null>(null)
-const open = computed({ get: () => !!selected.value, set: (v) => { if (!v) selected.value = null } })
+const open = computed({
+  get: () => !!selected.value,
+  set: (v) => {
+    if (!v) selected.value = null
+  }
+})
 
 async function load() {
   items.value = await table.list()
