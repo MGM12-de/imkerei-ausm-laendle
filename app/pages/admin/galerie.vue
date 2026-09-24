@@ -21,11 +21,13 @@ onMounted(load)
 async function onFiles(e: Event) {
   const files = [...((e.target as HTMLInputElement).files ?? [])]
   uploading.value = files.length
+  let aiCount = 0
   const minSort = Math.min(0, ...items.value.map(i => i.sort)) - files.length
   for (const [i, file] of files.entries()) {
     try {
-      const url = await upload(file, 'gallery')
-      await table.save({ image_url: url, caption: '', sort: minSort + i, published: true })
+      const [url, isAi] = await Promise.all([upload(file, 'gallery'), detectAiImage(file)])
+      if (isAi) aiCount++
+      await table.save({ image_url: url, image_ai: isAi, caption: '', sort: minSort + i, published: true })
     } catch (err) {
       toast.add({ title: `Upload fehlgeschlagen: ${file.name}`, description: (err as Error).message, color: 'error' })
     }
@@ -33,7 +35,12 @@ async function onFiles(e: Event) {
   }
   if (input.value) input.value.value = ''
   await load()
-  toast.add({ title: 'Fotos hochgeladen', color: 'success', icon: 'i-lucide-check' })
+  toast.add({
+    title: 'Fotos hochgeladen',
+    description: aiCount ? `${aiCount} als KI-generiert erkannt und gekennzeichnet` : undefined,
+    color: 'success',
+    icon: 'i-lucide-check'
+  })
 }
 
 async function update(img: GalleryImage, patch: Partial<GalleryImage>) {
