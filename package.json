@@ -1,0 +1,30 @@
+{
+  "name": "imkerei-ausm-laendle",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "build:cf": "nuxt build --preset=cloudflare_module",
+    "preview": "nuxt preview",
+    "deploy": "npm run build:cf && wrangler deploy",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.11.2",
+    "@nuxtjs/supabase": "^2.0.10",
+    "@supabase/supabase-js": "^2.117.1",
+    "nuxt": "^4.5.2",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.136",
+    "@iconify-json/simple-icons": "^1.2.97",
+    "@types/node": "^22.20.4",
+    "typescript": "~5.9",
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.139.0"
+  }
+}

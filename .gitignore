@@ -1,0 +1,21 @@
+# Nuxt
+node_modules
+.nuxt
+.output
+.data
+.nitro
+.cache
+dist
+
+# Cloudflare
+.wrangler
+
+# Umgebungsvariablen / Secrets
+.env
+.env.*
+!.env.example
+
+# Logs & System
+*.log
+.DS_Store
+.idea
