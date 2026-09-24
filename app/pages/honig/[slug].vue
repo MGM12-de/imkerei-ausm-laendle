@@ -9,10 +9,10 @@ if (!product.value) {
   throw createError({ statusCode: 404, statusMessage: 'Produkt nicht gefunden', fatal: true })
 }
 
-useSeoMeta({
+usePageSeo({
   title: () => product.value?.name,
-  description: () => product.value?.short_description,
-  ogImage: () => product.value?.image_url
+  description: () => product.value?.short_description || product.value?.description,
+  image: () => product.value?.image_url
 })
 
 const facts = computed(() => [

@@ -6,12 +6,13 @@ if (!post.value) {
   throw createError({ statusCode: 404, statusMessage: 'Beitrag nicht gefunden', fatal: true })
 }
 
-useSeoMeta({
+usePageSeo({
   title: () => post.value?.title,
-  description: () => post.value?.excerpt,
-  ogImage: () => post.value?.image_url,
-  ogType: 'article'
+  description: () => post.value?.excerpt || post.value?.content,
+  image: () => post.value?.image_url,
+  type: 'article'
 })
+useSeoMeta({ articlePublishedTime: () => post.value?.published_at })
 </script>
 
 <template>

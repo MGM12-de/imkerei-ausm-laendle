@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { categoryLabels, type ProductCategory } from '~/types/models'
 
-useSeoMeta({ title: 'Honig & Produkte', description: 'Unsere Honigsorten und Bienenprodukte – regional, schonend geschleudert, von Hand abgefüllt.' })
+usePageSeo({ title: 'Honig & Produkte', description: 'Blütenhonig, Waldhonig und Bienenprodukte aus dem Ländle – schonend kalt geschleudert, von Hand abgefüllt und direkt vom Imker. Jetzt Sorten entdecken.' })
 
 const { data: products } = await useProducts()
 const filter = ref<ProductCategory | 'alle'>('alle')

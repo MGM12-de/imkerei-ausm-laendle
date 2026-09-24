@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useSeoMeta({ title: 'Galerie', description: 'Eindrücke aus unserer Imkerei.' })
+usePageSeo({ title: 'Galerie', description: 'Fotos aus unserer Imkerei: Bienenvölker an Streuobstwiesen und Waldrand, die Arbeit am Bienenstock und die Honigernte.' })
 const { data: images } = await useGallery()
 const { data: s } = await useSettings()
 
@@ -42,7 +42,7 @@ function step(dir: number) {
           :aria-label="img.caption ?? 'Bild öffnen'"
           @click="show(i)"
         >
-          <img v-if="img.image_url" :src="img.image_url" :alt="img.caption ?? ''" loading="lazy" class="w-full transition duration-300 group-hover:scale-105">
+          <img v-if="img.image_url" :src="img.image_url" :alt="img.caption || 'Foto aus unserer Imkerei'" loading="lazy" class="w-full transition duration-300 group-hover:scale-105">
           <AiBadge v-if="img.image_url && img.image_ai" />
           <MediaImage v-else :class="i % 3 === 0 ? 'aspect-[3/4]' : 'aspect-square'" />
         </button>
@@ -54,7 +54,7 @@ function step(dir: number) {
       <template #body>
         <div class="relative flex size-full items-center justify-center">
           <div v-if="current?.image_url" class="relative flex max-h-full max-w-full">
-            <img :src="current.image_url" :alt="current.caption ?? ''" class="max-h-full max-w-full object-contain rounded-lg">
+            <img :src="current.image_url" :alt="current.caption || 'Foto aus unserer Imkerei'" class="max-h-full max-w-full object-contain rounded-lg">
             <AiBadge v-if="current.image_ai" />
           </div>
           <MediaImage v-else class="aspect-square w-full max-w-lg rounded-2xl" />

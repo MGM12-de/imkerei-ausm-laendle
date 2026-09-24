@@ -2,7 +2,7 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { contactSchema, type ContactInput } from '#shared/contact'
 
-useSeoMeta({ title: 'Kontakt', description: 'Honig anfragen, Termin vereinbaren oder einfach Hallo sagen.' })
+usePageSeo({ title: 'Kontakt', description: 'Honig bestellen oder zurücklegen lassen, Hofverkauf vereinbaren oder Fragen zu unseren Bienen stellen – wir freuen uns auf eure Nachricht.' })
 
 const { data: s } = await useSettings()
 const route = useRoute()
