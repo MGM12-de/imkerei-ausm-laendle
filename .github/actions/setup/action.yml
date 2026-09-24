@@ -1,0 +1,31 @@
+name: Setup Node & Dependencies
+description: Node einrichten und node_modules aus dem Cache holen – npm ci läuft nur, wenn sich package-lock.json geändert hat.
+
+inputs:
+  prepare:
+    description: Nach einem Cache-Treffer `nuxt prepare` ausführen (erzeugt .nuxt für Lint/Typecheck/Build)
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - id: node
+      uses: actions/setup-node@v7
+      with:
+        node-version: 22
+
+    - id: cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node-modules-${{ runner.os }}-node${{ steps.node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
+    # Cache-Miss: frisch installieren (postinstall führt `nuxt prepare` aus)
+    - if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci --no-audit --no-fund
+
+    # Cache-Treffer: postinstall läuft nicht, .nuxt ist nicht gecacht
+    - if: steps.cache.outputs.cache-hit == 'true' && inputs.prepare == 'true'
+      shell: bash
+      run: npx nuxt prepare

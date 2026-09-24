@@ -17,48 +17,52 @@ jobs:
   lint:
     name: Lint & Typecheck
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+      - uses: ./.github/actions/setup
       - run: npm run lint
       - run: npm run typecheck
 
   build:
     name: Build (Cloudflare)
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build:cf
-
-  deploy:
-    name: Deploy (Cloudflare)
-    needs: [lint, build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
+    timeout-minutes: 15
     env:
       # Public values (the publishable key ships to every browser; RLS protects the data)
       SUPABASE_URL: https://tpuzxdsyqdvhusxzbbpi.supabase.co
       SUPABASE_KEY: sb_publishable_HTXt1PBANr49nH05cJB5Og_P6w9NWEj
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
+      - uses: ./.github/actions/setup
       - run: npm run build:cf
+      # Deploy reuses this build instead of building a second time
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: .output
+          include-hidden-files: true
+          retention-days: 1
+
+  deploy:
+    name: Deploy (Cloudflare)
+    needs: [lint, build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          prepare: 'false'
+      - uses: actions/download-artifact@v4
+        with:
+          name: output
+          path: .output
       - id: deploy
         run: |
           npx wrangler deploy 2>&1 | tee deploy.log
