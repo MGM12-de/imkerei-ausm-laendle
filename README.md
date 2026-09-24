@@ -70,18 +70,19 @@ Sicherheit: Alle Schreibrechte laufen über Row Level Security – nur Benutzer 
 
 ## Deployment auf Cloudflare
 
-**Variante A – Git (empfohlen):** Repo zu GitHub pushen → Cloudflare Dashboard → *Workers & Pages → Create → Import a repository*.
-- Build command: `npm run build:cf`
-- Deploy command: `npx wrangler deploy`
-- Umgebungsvariablen (Settings → Variables): `NUXT_PUBLIC_SUPABASE_URL`, `NUXT_PUBLIC_SUPABASE_KEY` (und für den Build zusätzlich `SUPABASE_URL`, `SUPABASE_KEY`).
+**Automatisch per GitHub Action:** Jeder Push auf `main` wird nach erfolgreichem Lint, Typecheck und Build als Cloudflare Worker `imkerei-ausm-laendle` deployt (Job `Deploy (Cloudflare)` in `.github/workflows/ci.yml`). Supabase-URL und Publishable Key stehen direkt im Workflow – beide sind öffentlich, die Daten schützt Row Level Security.
 
-**Variante B – von der Kommandozeile:**
+Einmalig einrichten (GitHub → *Settings → Secrets and variables → Actions → New repository secret*):
+- `CLOUDFLARE_ACCOUNT_ID`: Cloudflare Dashboard → *Workers & Pages* → Account ID (rechte Seitenleiste)
+- `CLOUDFLARE_API_TOKEN`: Cloudflare Dashboard → *My Profile → API Tokens → Create Token* → Vorlage **„Edit Cloudflare Workers“**
+
+**Manuell von der Kommandozeile:**
 ```bash
 npx wrangler login
 npm run deploy
 ```
 
-Danach eigene Domain unter *Settings → Domains & Routes* verbinden.
+Danach eigene Domain unter *Settings → Domains & Routes* verbinden und die Domain in Supabase unter *Authentication → URL Configuration* eintragen.
 
 ## Vor dem Livegang
 
