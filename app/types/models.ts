@@ -125,3 +125,18 @@ export const categoryLabels: Record<ProductCategory, string> = {
   geschenk: 'Geschenke',
   sonstiges: 'Sonstiges'
 }
+
+/** Ergebnis von public.admin_team() */
+export interface TeamMember {
+  user_id: string
+  email: string
+  display_name: string | null
+  created_at: string
+  last_sign_in_at: string | null
+  invited_at: string | null
+}
+
+export interface Profile {
+  user_id: string
+  display_name: string | null
+}
