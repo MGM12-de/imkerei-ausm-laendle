@@ -20,3 +20,11 @@ export const slugify = (text: string) =>
 
 export const instagramUrl = (handle?: string | null) =>
   handle ? `https://www.instagram.com/${handle.replace(/^@/, '')}` : ''
+
+/** Veränderung der Seitenaufrufe gegenüber dem Zeitraum davor */
+export const visitTrend = (stats: { total: number, previous: number } | null | undefined) => {
+  if (!stats?.previous) return null
+  const pct = Math.round(((stats.total - stats.previous) / stats.previous) * 100)
+  const value = `${pct >= 0 ? '+' : ''}${pct} %`
+  return { up: pct >= 0, value, label: `${value} zum Vorzeitraum` }
+}

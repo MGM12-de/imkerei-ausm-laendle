@@ -19,6 +19,7 @@ const items = computed<NavigationMenuItem[][]>(() => [[
   { label: 'Termine', icon: 'i-lucide-calendar-days', to: '/admin/termine', onSelect: () => { open.value = false } },
   { label: 'Galerie', icon: 'i-lucide-images', to: '/admin/galerie', onSelect: () => { open.value = false } },
   { label: 'Nachrichten', icon: 'i-lucide-inbox', to: '/admin/nachrichten', badge: unread.value ? String(unread.value) : undefined, onSelect: () => { open.value = false } },
+  { label: 'Statistik', icon: 'i-lucide-chart-column', to: '/admin/statistik', onSelect: () => { open.value = false } },
   { label: 'Einstellungen', icon: 'i-lucide-settings', to: '/admin/einstellungen', onSelect: () => { open.value = false } }
 ], [
   { label: 'Webseite ansehen', icon: 'i-lucide-external-link', to: '/', target: '_blank' }
