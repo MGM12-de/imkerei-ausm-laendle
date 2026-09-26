@@ -18,9 +18,11 @@ const { data: s } = await useSettings()
       <p>Wenn du uns über das Kontaktformular schreibst, speichern wir deine Angaben (Name, E-Mail, ggf. Telefon, Nachricht) ausschließlich zur Bearbeitung deiner Anfrage (Art. 6 Abs. 1 lit. a und b DSGVO). Die Daten werden gelöscht, sobald sie nicht mehr benötigt werden.</p>
       <h2>5. Cookies</h2>
       <p>Wir verwenden keine Tracking-Cookies. Lediglich für den Login-Bereich werden technisch notwendige Cookies gesetzt.</p>
-      <h2>6. Instagram</h2>
+      <h2>6. Besucherstatistik</h2>
+      <p>Um zu sehen, welche Seiten gelesen werden, zählen wir Seitenaufrufe. Dabei speichern wir nur die aufgerufene Seite, die Domain der verweisenden Webseite (z. B. google.com), den Gerätetyp (Handy, Tablet, Computer) und das Land, aus dem der Aufruf kommt. Es werden keine Cookies gesetzt und weder IP-Adresse noch Browserkennung gespeichert; ein Rückschluss auf einzelne Personen ist nicht möglich (Art. 6 Abs. 1 lit. f DSGVO, berechtigtes Interesse an der Verbesserung unseres Angebots).</p>
+      <h2>7. Instagram</h2>
       <p>Auf unserer Seite verlinken wir auf Instagram. Es werden erst Daten übertragen, wenn du den Link anklickst.</p>
-      <h2>7. Deine Rechte</h2>
+      <h2>8. Deine Rechte</h2>
       <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie ein Beschwerderecht bei einer Aufsichtsbehörde.</p>
     </div>
   </UContainer>

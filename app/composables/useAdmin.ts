@@ -1,4 +1,4 @@
-import type { EventItem, GalleryImage, Message, Post, Product, SiteSettings } from '~/types/models'
+import type { EventItem, GalleryImage, Message, PageViewStats, Post, Product, SiteSettings } from '~/types/models'
 import { demoEvents, demoGallery, demoPosts, demoProducts, demoSettings } from '~/utils/demo'
 
 type TableMap = {
@@ -121,6 +121,63 @@ export function useAdminSettings() {
   }
 
   return { load, save }
+}
+
+/** Besucherstatistik der letzten `days` Tage (Tabelle page_views) */
+export function usePageViewStats() {
+  const supabase = useDb()
+  const isDemo = useDemoMode()
+
+  async function load(days = 30): Promise<PageViewStats> {
+    if (isDemo) return demoStats(days)
+    const { data, error } = await supabase.rpc('page_view_stats', { days })
+    if (error) throw error
+    return data as PageViewStats
+  }
+
+  return { load }
+}
+
+function demoStats(days: number): PageViewStats {
+  const today = new Date()
+  const daily = Array.from({ length: days }, (_, i) => {
+    const d = new Date(today)
+    d.setDate(d.getDate() - (days - 1 - i))
+    const weekend = d.getDay() === 0 || d.getDay() === 6
+    return { day: d.toISOString().slice(0, 10), views: Math.round((weekend ? 38 : 22) + 12 * Math.sin(i * 1.7)) }
+  })
+  const total = daily.reduce((sum, d) => sum + d.views, 0)
+  const share = (f: number) => Math.round(total * f)
+  return {
+    days,
+    total,
+    previous: Math.round(total * 0.86),
+    today: daily.at(-1)!.views,
+    daily,
+    pages: [
+      { label: '/', views: share(0.34) },
+      { label: '/honig', views: share(0.22) },
+      { label: '/honig/sommertracht', views: share(0.11) },
+      { label: '/termine', views: share(0.09) },
+      { label: '/kontakt', views: share(0.07) },
+      { label: '/ueber-uns', views: share(0.05) }
+    ],
+    referrers: [
+      { label: 'google.com', views: share(0.18) },
+      { label: 'instagram.com', views: share(0.09) },
+      { label: 'bing.com', views: share(0.02) }
+    ],
+    devices: [
+      { label: 'mobile', views: share(0.68) },
+      { label: 'desktop', views: share(0.27) },
+      { label: 'tablet', views: share(0.05) }
+    ],
+    countries: [
+      { label: 'DE', views: share(0.88) },
+      { label: 'AT', views: share(0.07) },
+      { label: 'CH', views: share(0.05) }
+    ]
+  }
 }
 
 /** Lädt ein Bild (vorher verkleinert) in den Storage-Bucket "media" */

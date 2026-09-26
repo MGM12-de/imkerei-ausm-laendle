@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EventItem, Message } from '~/types/models'
+import type { EventItem, Message, PageViewStats } from '~/types/models'
 
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 useSeoMeta({ title: 'Übersicht', robots: 'noindex' })
@@ -12,8 +12,15 @@ const messages = useAdminTable('messages')
 const stats = ref({ products: 0, available: 0, posts: 0, events: 0, unread: 0 })
 const nextEvents = ref<EventItem[]>([])
 const latestMessages = ref<Message[]>([])
+const visits = ref<PageViewStats | null>(null)
 
 onMounted(async () => {
+  // Statistik separat laden, damit ein Fehler dort den Rest nicht blockiert
+  usePageViewStats().load(30)
+    .then((v) => {
+      visits.value = v
+    })
+    .catch(() => {})
   const [p, b, e, m] = await Promise.all([products.list(), posts.list(), events.list(), messages.list()])
   const today = new Date().toISOString().slice(0, 10)
   const upcoming = e.filter(x => x.date >= today).sort((a, z) => a.date.localeCompare(z.date))
@@ -34,6 +41,8 @@ const cards = computed(() => [
   { label: 'Kommende Termine', value: stats.value.events, icon: 'i-lucide-calendar-days', to: '/admin/termine' },
   { label: 'Ungelesene Nachrichten', value: stats.value.unread, icon: 'i-lucide-inbox', to: '/admin/nachrichten' }
 ])
+
+const trend = computed(() => visitTrend(visits.value))
 
 const quick = [
   { label: 'Neues Produkt', icon: 'i-lucide-plus', to: '/admin/produkte/neu' },
@@ -64,6 +73,32 @@ const quick = [
           <p class="text-sm text-muted">{{ c.label }}</p>
         </NuxtLink>
       </div>
+
+      <UCard v-if="visits">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-highlighted">Besucher der letzten 30 Tage</h3>
+            <UButton to="/admin/statistik" variant="link" size="sm">Details</UButton>
+          </div>
+        </template>
+        <div class="grid gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2">
+            <div class="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p class="text-3xl font-semibold text-highlighted tabular-nums">{{ visits.total }}</p>
+              <p class="text-sm text-muted">Seitenaufrufe</p>
+              <UBadge v-if="trend" :color="trend.up ? 'success' : 'neutral'" variant="subtle" :icon="trend.up ? 'i-lucide-trending-up' : 'i-lucide-trending-down'">
+                {{ trend.label }}
+              </UBadge>
+              <p class="text-sm text-muted sm:ml-auto">Heute: <span class="font-medium text-highlighted">{{ visits.today }}</span></p>
+            </div>
+            <AdminViewsChart :daily="visits.daily" />
+          </div>
+          <div>
+            <p class="mb-2 text-sm font-medium text-highlighted">Beliebteste Seiten</p>
+            <AdminStatsList :items="visits.pages.slice(0, 5)" empty="Noch keine Aufrufe gezählt." />
+          </div>
+        </div>
+      </UCard>
 
       <div class="grid gap-6 lg:grid-cols-2">
         <UCard>
