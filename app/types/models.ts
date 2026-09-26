@@ -100,15 +100,19 @@ export interface Message {
 export interface StatsEntry {
   label: string
   views: number
+  visitors?: number
 }
 
 /** Ergebnis von public.page_view_stats() */
 export interface PageViewStats {
   days: number
   total: number
+  visitors: number
   previous: number
+  visitors_previous: number
   today: number
-  daily: { day: string, views: number }[]
+  visitors_today: number
+  daily: { day: string, views: number, visitors: number }[]
   pages: StatsEntry[]
   referrers: StatsEntry[]
   devices: StatsEntry[]

@@ -144,15 +144,20 @@ function demoStats(days: number): PageViewStats {
     const d = new Date(today)
     d.setDate(d.getDate() - (days - 1 - i))
     const weekend = d.getDay() === 0 || d.getDay() === 6
-    return { day: d.toISOString().slice(0, 10), views: Math.round((weekend ? 38 : 22) + 12 * Math.sin(i * 1.7)) }
+    const views = Math.round((weekend ? 38 : 22) + 12 * Math.sin(i * 1.7))
+    return { day: d.toISOString().slice(0, 10), views, visitors: Math.round(views / 2.6) }
   })
   const total = daily.reduce((sum, d) => sum + d.views, 0)
+  const visitors = daily.reduce((sum, d) => sum + d.visitors, 0)
   const share = (f: number) => Math.round(total * f)
   return {
     days,
     total,
+    visitors,
     previous: Math.round(total * 0.86),
+    visitors_previous: Math.round(visitors * 0.88),
     today: daily.at(-1)!.views,
+    visitors_today: daily.at(-1)!.visitors,
     daily,
     pages: [
       { label: '/', views: share(0.34) },

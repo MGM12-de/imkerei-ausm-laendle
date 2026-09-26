@@ -19,7 +19,7 @@ const { data: s } = await useSettings()
       <h2>5. Cookies</h2>
       <p>Wir verwenden keine Tracking-Cookies. Lediglich für den Login-Bereich werden technisch notwendige Cookies gesetzt.</p>
       <h2>6. Besucherstatistik</h2>
-      <p>Um zu sehen, welche Seiten gelesen werden, zählen wir Seitenaufrufe. Dabei speichern wir nur die aufgerufene Seite, die Domain der verweisenden Webseite (z. B. google.com), den Gerätetyp (Handy, Tablet, Computer) und das Land, aus dem der Aufruf kommt. Es werden keine Cookies gesetzt und weder IP-Adresse noch Browserkennung gespeichert; ein Rückschluss auf einzelne Personen ist nicht möglich (Art. 6 Abs. 1 lit. f DSGVO, berechtigtes Interesse an der Verbesserung unseres Angebots).</p>
+      <p>Um zu sehen, welche Seiten gelesen werden, zählen wir Seitenaufrufe und Besucher. Dabei speichern wir nur die aufgerufene Seite, die Domain der verweisenden Webseite (z. B. google.com), den Gerätetyp (Handy, Tablet, Computer) und das Land, aus dem der Aufruf kommt. Um Besucher zählen zu können, wird aus IP-Adresse und Browserkennung zusammen mit einem zufälligen, täglich wechselnden Wert eine anonyme Kennung (Hash) gebildet. Der Zufallswert wird nach einem Tag gelöscht, danach lässt sich die Kennung niemandem mehr zuordnen. IP-Adresse und Browserkennung selbst werden nicht gespeichert, und es werden keine Cookies gesetzt. Die Daten werden nach 18 Monaten automatisch gelöscht (Art. 6 Abs. 1 lit. f DSGVO, berechtigtes Interesse an der Verbesserung unseres Angebots).</p>
       <h2>7. Instagram</h2>
       <p>Auf unserer Seite verlinken wir auf Instagram. Es werden erst Daten übertragen, wenn du den Link anklickst.</p>
       <h2>8. Deine Rechte</h2>
