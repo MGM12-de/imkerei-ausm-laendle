@@ -19,6 +19,8 @@ type Schema = z.output<typeof schema>
 const state = reactive({ email: '', password: '' })
 const loading = ref(false)
 const resetSent = ref(false)
+const mode = ref<'password' | 'link'>('password')
+const linkSent = ref(false)
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (isDemo) return navigateTo('/admin')
@@ -31,6 +33,28 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
   useState('is-admin').value = null
   await navigateTo(typeof route.query.redirect === 'string' ? route.query.redirect : '/admin')
+}
+
+// Login-Link: kein Passwort nötig, nur bestehende Konten (neue Konten nur per Einladung)
+async function sendLoginLink() {
+  if (isDemo) return navigateTo('/admin')
+  if (!z.string().email().safeParse(state.email).success) {
+    toast.add({ title: 'Bitte gültige E-Mail eingeben', color: 'warning' })
+    return
+  }
+  loading.value = true
+  const redirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/admin') ? route.query.redirect : '/admin'
+  const { error } = await supabase.auth.signInWithOtp({
+    email: state.email,
+    options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}${redirect}` }
+  })
+  loading.value = false
+  // Nicht verraten, ob es ein Konto zu der Adresse gibt – nur Wartezeit melden
+  if (error?.status === 429) {
+    toast.add({ title: 'Bitte kurz warten', description: 'Aus Sicherheitsgründen geht das nur einmal pro Minute.', color: 'warning' })
+    return
+  }
+  linkSent.value = true
 }
 
 async function resetPassword() {
@@ -58,8 +82,24 @@ async function resetPassword() {
       <UAlert v-if="route.query.error === 'forbidden'" color="error" variant="subtle" title="Kein Zugriff" description="Dieses Konto ist nicht als Admin freigeschaltet." class="mb-4" />
       <UAlert v-if="isDemo" color="warning" variant="subtle" icon="i-lucide-flask-conical" title="Demo-Modus" description="Keine Datenbank verbunden – einfach auf „Anmelden“ klicken." class="mb-4" />
       <UAlert v-if="resetSent" color="success" variant="subtle" title="E-Mail verschickt" description="Schau in dein Postfach und folge dem Link." class="mb-4" />
+      <UAlert v-if="linkSent" color="success" variant="subtle" icon="i-lucide-mail-check" title="Login-Link verschickt" description="Falls ein Konto zu dieser Adresse existiert, bekommst du gleich eine E-Mail. Ein Klick auf den Link meldet dich an." class="mb-4" />
 
-      <UForm :schema="isDemo ? undefined : schema" :state="state" class="space-y-4" @submit="onSubmit">
+      <UTabs
+        v-model="mode"
+        :items="[{ label: 'Passwort', value: 'password', icon: 'i-lucide-key-round' }, { label: 'Login-Link', value: 'link', icon: 'i-lucide-mail' }]"
+        :content="false"
+        size="sm"
+        class="mb-4"
+      />
+
+      <form v-if="mode === 'link'" class="space-y-4" @submit.prevent="sendLoginLink">
+        <UFormField label="E-Mail" name="email" description="Wir schicken dir einen Link, mit dem du dich ohne Passwort anmeldest.">
+          <UInput v-model="state.email" type="email" autocomplete="username" size="xl" class="w-full" />
+        </UFormField>
+        <UButton type="submit" block size="xl" icon="i-lucide-send" :loading="loading">Login-Link senden</UButton>
+      </form>
+
+      <UForm v-else :schema="isDemo ? undefined : schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="E-Mail" name="email">
           <UInput v-model="state.email" type="email" autocomplete="username" size="xl" class="w-full" />
         </UFormField>
@@ -71,7 +111,7 @@ async function resetPassword() {
 
       <div class="mt-4 flex justify-between text-sm">
         <ULink to="/" class="text-muted hover:text-primary">← Zur Webseite</ULink>
-        <button type="button" class="text-muted hover:text-primary" @click="resetPassword">Passwort vergessen?</button>
+        <button v-if="mode === 'password'" type="button" class="text-muted hover:text-primary" @click="resetPassword">Passwort vergessen?</button>
       </div>
     </UCard>
   </div>

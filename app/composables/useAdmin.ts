@@ -1,4 +1,4 @@
-import type { EventItem, GalleryImage, Message, PageViewStats, Post, Product, SiteSettings } from '~/types/models'
+import type { EventItem, GalleryImage, Message, PageViewStats, Post, Product, Profile, SiteSettings, TeamMember } from '~/types/models'
 import { demoEvents, demoGallery, demoPosts, demoProducts, demoSettings } from '~/utils/demo'
 
 type TableMap = {
@@ -236,4 +236,76 @@ async function resizeImage(file: File, maxSize: number): Promise<Blob> {
   bitmap.close()
   return await new Promise((resolve, reject) =>
     canvas.toBlob(b => b ? resolve(b) : reject(new Error('Bild konnte nicht verarbeitet werden')), 'image/webp', 0.85))
+}
+
+const demoTeam: TeamMember[] = [
+  { user_id: 'demo-1', email: 'imker@example.de', display_name: 'Imker', created_at: new Date(Date.now() - 90 * 864e5).toISOString(), last_sign_in_at: new Date().toISOString(), invited_at: null },
+  { user_id: 'demo-2', email: 'helferin@example.de', display_name: 'Helferin', created_at: new Date(Date.now() - 2 * 864e5).toISOString(), last_sign_in_at: null, invited_at: new Date(Date.now() - 2 * 864e5).toISOString() }
+]
+
+/** Admin-Team: auflisten, einladen, entfernen */
+export function useTeam() {
+  const supabase = useDb()
+  const isDemo = useDemoMode()
+  const team = () => useState('admin-demo-team', () => structuredClone(demoTeam))
+
+  async function list(): Promise<TeamMember[]> {
+    if (isDemo) return [...team().value]
+    const { data, error } = await supabase.rpc('admin_team')
+    if (error) throw error
+    return data as TeamMember[]
+  }
+
+  async function invite(email: string, name?: string): Promise<{ invited: boolean }> {
+    if (isDemo) {
+      team().value.push({ user_id: crypto.randomUUID(), email, display_name: name || null, created_at: new Date().toISOString(), last_sign_in_at: null, invited_at: new Date().toISOString() })
+      return { invited: true }
+    }
+    const { data: { session } } = await supabase.auth.getSession()
+    return await $fetch('/api/admin/invite', {
+      method: 'POST',
+      body: { email, name: name || undefined },
+      headers: { Authorization: `Bearer ${session?.access_token ?? ''}` }
+    })
+  }
+
+  async function remove(userId: string) {
+    if (isDemo) {
+      team().value = team().value.filter(m => m.user_id !== userId)
+      return
+    }
+    const { error, count } = await supabase.from('admins').delete({ count: 'exact' }).eq('user_id', userId)
+    if (error) throw error
+    if (!count) throw new Error('Du kannst dich nicht selbst entfernen.')
+  }
+
+  return { list, invite, remove }
+}
+
+/** Eigenes Profil (Anzeigename) – gilt später genauso für Kundenkonten */
+export function useProfile() {
+  const supabase = useDb()
+  const isDemo = useDemoMode()
+  const demo = () => useState<Profile>('admin-demo-profile', () => ({ user_id: 'demo-1', display_name: 'Imker' }))
+
+  async function load(): Promise<Profile> {
+    if (isDemo) return { ...demo().value }
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Nicht angemeldet')
+    const { data, error } = await supabase.from('profiles').select('user_id, display_name').eq('user_id', user.id).maybeSingle()
+    if (error) throw error
+    return (data as Profile | null) ?? { user_id: user.id, display_name: null }
+  }
+
+  async function save(profile: Profile) {
+    const display_name = profile.display_name?.trim() || null
+    if (isDemo) {
+      demo().value.display_name = display_name
+      return
+    }
+    const { error } = await supabase.from('profiles').upsert({ user_id: profile.user_id, display_name })
+    if (error) throw error
+  }
+
+  return { load, save }
 }

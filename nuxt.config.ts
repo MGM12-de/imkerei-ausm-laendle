@@ -19,6 +19,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Nur serverseitig (Admins einladen). Auf Cloudflare als Secret NUXT_SUPABASE_SECRET_KEY setzen.
+    supabase: { secretKey: '' },
     public: {
       siteUrl: 'https://www.imkerei-ausm-laendle.de'
     }

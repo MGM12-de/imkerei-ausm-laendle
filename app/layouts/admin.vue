@@ -12,6 +12,12 @@ onMounted(async () => {
   unread.value = msgs.filter(m => !m.read).length
 })
 
+const displayName = useState<string | null>('admin-display-name', () => null)
+onMounted(async () => {
+  const profile = await useProfile().load().catch(() => null)
+  displayName.value = profile?.display_name ?? null
+})
+
 const items = computed<NavigationMenuItem[][]>(() => [[
   { label: 'Übersicht', icon: 'i-lucide-layout-dashboard', to: '/admin', exact: true, onSelect: () => { open.value = false } },
   { label: 'Produkte', icon: 'i-lucide-droplet', to: '/admin/produkte', onSelect: () => { open.value = false } },
@@ -20,7 +26,8 @@ const items = computed<NavigationMenuItem[][]>(() => [[
   { label: 'Galerie', icon: 'i-lucide-images', to: '/admin/galerie', onSelect: () => { open.value = false } },
   { label: 'Nachrichten', icon: 'i-lucide-inbox', to: '/admin/nachrichten', badge: unread.value ? String(unread.value) : undefined, onSelect: () => { open.value = false } },
   { label: 'Statistik', icon: 'i-lucide-chart-column', to: '/admin/statistik', onSelect: () => { open.value = false } },
-  { label: 'Einstellungen', icon: 'i-lucide-settings', to: '/admin/einstellungen', onSelect: () => { open.value = false } }
+  { label: 'Einstellungen', icon: 'i-lucide-settings', to: '/admin/einstellungen', onSelect: () => { open.value = false } },
+  { label: 'Team', icon: 'i-lucide-users', to: '/admin/team', onSelect: () => { open.value = false } }
 ], [
   { label: 'Webseite ansehen', icon: 'i-lucide-external-link', to: '/', target: '_blank' }
 ]])
@@ -48,8 +55,10 @@ async function logout() {
 
       <template #footer="{ collapsed }">
         <div class="flex w-full items-center gap-2">
-          <UAvatar :text="(user?.email as string | undefined)?.[0]?.toUpperCase() ?? 'I'" size="sm" class="bg-primary/15 text-primary" />
-          <span v-if="!collapsed" class="min-w-0 flex-1 truncate text-sm text-muted">{{ user?.email ?? (isDemo ? 'Demo' : '') }}</span>
+          <NuxtLink to="/admin/profil" class="flex min-w-0 flex-1 items-center gap-2 rounded-md hover:text-primary" aria-label="Mein Profil" @click="open = false">
+            <UAvatar :text="(displayName || (user?.email as string | undefined))?.[0]?.toUpperCase() ?? 'I'" size="sm" class="bg-primary/15 text-primary" />
+            <span v-if="!collapsed" class="min-w-0 flex-1 truncate text-sm text-muted">{{ displayName || user?.email || (isDemo ? 'Demo' : '') }}</span>
+          </NuxtLink>
           <UTooltip text="Abmelden">
             <UButton v-if="!collapsed" icon="i-lucide-log-out" color="neutral" variant="ghost" aria-label="Abmelden" @click="logout" />
           </UTooltip>
