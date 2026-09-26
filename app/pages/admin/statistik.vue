@@ -29,8 +29,8 @@ async function load() {
 onMounted(load)
 watch(days, load)
 
-const trend = computed(() => visitTrend(data.value))
-const average = computed(() => data.value ? Math.round(data.value.total / data.value.days) : 0)
+const trend = computed(() => visitTrend(data.value?.visitors, data.value?.visitors_previous))
+const perVisit = computed(() => data.value?.visitors ? (data.value.total / data.value.visitors).toLocaleString('de-DE', { maximumFractionDigits: 1 }) : '–')
 
 const deviceLabels: Record<string, string> = { mobile: 'Handy', tablet: 'Tablet', desktop: 'Computer' }
 const regions = new Intl.DisplayNames('de', { type: 'region' })
@@ -55,22 +55,22 @@ const country = (code: string) => {
       variant="subtle"
       icon="i-lucide-circle-x"
       title="Statistik konnte nicht geladen werden"
-      description="Ist die Datenbank-Migration 0004_page_views.sql schon eingespielt?"
+      description="Sind die Datenbank-Migrationen 0004 und 0005 schon eingespielt?"
     />
 
     <div v-else-if="data" class="space-y-6" :class="{ 'opacity-60': loading }">
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div class="rounded-xl ring ring-default p-4">
+          <p class="text-2xl font-semibold text-highlighted tabular-nums">{{ data.visitors }}</p>
+          <p class="text-sm text-muted">Besucher</p>
+        </div>
+        <div class="rounded-xl ring ring-default p-4">
           <p class="text-2xl font-semibold text-highlighted tabular-nums">{{ data.total }}</p>
-          <p class="text-sm text-muted">Seitenaufrufe</p>
+          <p class="text-sm text-muted">Seitenaufrufe ({{ perVisit }} pro Besucher)</p>
         </div>
         <div class="rounded-xl ring ring-default p-4">
-          <p class="text-2xl font-semibold text-highlighted tabular-nums">{{ average }}</p>
-          <p class="text-sm text-muted">Pro Tag (Ø)</p>
-        </div>
-        <div class="rounded-xl ring ring-default p-4">
-          <p class="text-2xl font-semibold text-highlighted tabular-nums">{{ data.today }}</p>
-          <p class="text-sm text-muted">Heute</p>
+          <p class="text-2xl font-semibold text-highlighted tabular-nums">{{ data.visitors_today }}</p>
+          <p class="text-sm text-muted">Besucher heute</p>
         </div>
         <div class="rounded-xl ring ring-default p-4">
           <p class="text-2xl font-semibold tabular-nums" :class="trend?.up ? 'text-success' : 'text-highlighted'">
@@ -82,7 +82,7 @@ const country = (code: string) => {
 
       <UCard>
         <template #header>
-          <h3 class="font-semibold text-highlighted">Aufrufe pro Tag</h3>
+          <h3 class="font-semibold text-highlighted">Besucher pro Tag</h3>
         </template>
         <AdminViewsChart :daily="data.daily" />
       </UCard>
@@ -115,8 +115,9 @@ const country = (code: string) => {
       </div>
 
       <p class="text-xs text-muted">
-        Gezählt wird ohne Cookies und ohne IP-Adressen – deshalb gibt es nur Seitenaufrufe, keine „eindeutigen Besucher“.
-        Eigene Aufrufe im angemeldeten Zustand werden nicht mitgezählt.
+        Gezählt wird ohne Cookies: Besucher werden über einen anonymen, täglich wechselnden Code erkannt.
+        Wer an zwei Tagen vorbeischaut, zählt deshalb als zwei Besucher. Eigene Aufrufe im angemeldeten Zustand werden nicht mitgezählt.
+        Daten älter als 18 Monate werden automatisch gelöscht.
       </p>
     </div>
   </AdminPage>

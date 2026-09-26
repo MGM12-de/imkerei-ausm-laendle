@@ -42,7 +42,7 @@ const cards = computed(() => [
   { label: 'Ungelesene Nachrichten', value: stats.value.unread, icon: 'i-lucide-inbox', to: '/admin/nachrichten' }
 ])
 
-const trend = computed(() => visitTrend(visits.value))
+const trend = computed(() => visitTrend(visits.value?.visitors, visits.value?.visitors_previous))
 
 const quick = [
   { label: 'Neues Produkt', icon: 'i-lucide-plus', to: '/admin/produkte/neu' },
@@ -84,12 +84,12 @@ const quick = [
         <div class="grid gap-6 lg:grid-cols-3">
           <div class="lg:col-span-2">
             <div class="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p class="text-3xl font-semibold text-highlighted tabular-nums">{{ visits.total }}</p>
-              <p class="text-sm text-muted">Seitenaufrufe</p>
+              <p class="text-3xl font-semibold text-highlighted tabular-nums">{{ visits.visitors }}</p>
+              <p class="text-sm text-muted">Besucher · {{ visits.total }} Seitenaufrufe</p>
               <UBadge v-if="trend" :color="trend.up ? 'success' : 'neutral'" variant="subtle" :icon="trend.up ? 'i-lucide-trending-up' : 'i-lucide-trending-down'">
                 {{ trend.label }}
               </UBadge>
-              <p class="text-sm text-muted sm:ml-auto">Heute: <span class="font-medium text-highlighted">{{ visits.today }}</span></p>
+              <p class="text-sm text-muted sm:ml-auto">Heute: <span class="font-medium text-highlighted">{{ visits.visitors_today }}</span> Besucher</p>
             </div>
             <AdminViewsChart :daily="visits.daily" />
           </div>

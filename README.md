@@ -50,7 +50,7 @@ URL und Publishable Key stehen in `.env` (der Key ist öffentlich und darf ins F
 ## Supabase neu einrichten (falls nötig)
 
 1. Projekt auf [supabase.com](https://supabase.com) anlegen (Region: Frankfurt `eu-central-1`).
-2. **SQL Editor** → `supabase/migrations/0001_init.sql`, danach `0002_private_is_admin.sql`, `0003_image_ai_flag.sql` und `0004_page_views.sql` ausführen.
+2. **SQL Editor** → `supabase/migrations/0001_init.sql`, danach `0002_private_is_admin.sql`, `0003_image_ai_flag.sql`, `0004_page_views.sql` und `0005_visitors_retention.sql` ausführen.
 3. Optional: `supabase/seed.sql` ausführen (Beispielinhalte).
 4. **Authentication → Users → Add user**: Konto für den Imker anlegen (E-Mail + Passwort, „Auto confirm“).
 5. Diesen Benutzer als Admin freischalten (SQL Editor):
